@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+char s[3][3],t[3][3];
+int dx[]={1,0,-1,0};
+int dy[]={0,1,0,-1};
+bool pan()
+{
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            if(s[i][j]!=t[i][j]+'0')
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+void dfs(int x,int y)
+{
+    if(pan())
+    {
+       
+    }
+}
+int main()
+{
+    int a=1;
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            cin>>s[i][j];
+            t[i][j]=a;
+            a++;
+        }
+    }
+    
+    return 0;
+}
