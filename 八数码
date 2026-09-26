@@ -1,41 +1,87 @@
 #include <bits/stdc++.h>
 using namespace std;
-char s[3][3],t[3][3];
-int dx[]={1,0,-1,0};
-int dy[]={0,1,0,-1};
-bool pan()
+
+const char target[3][3] = {{'1','2','3'},{'4','5','6'},{'7','8','x'}};
+int dx[] = {1,0,-1,0};
+int dy[] = {0,1,0,-1};
+char dir[] = {'d','r','u','l'};
+
+// 逆序数判断是否有解
+bool checkSolvable(string st)
 {
-    for(int i=0;i<3;i++)
+    int cnt = 0;
+    for(int i=0;i<9;i++)
     {
-        for(int j=0;j<3;j++)
+        if(st[i] == 'x') continue;
+        for(int j=i+1;j<9;j++)
         {
-            if(s[i][j]!=t[i][j]+'0')
+            if(st[j] == 'x') continue;
+            if(st[i] > st[j]) cnt++;
+        }
+    }
+    return cnt % 2 == 0;
+}
+
+// BFS
+string bfs(string start)
+{
+    queue<pair<string, string>> q; // (当前状态，路径)
+    unordered_set<string> vis;
+    q.push({start, ""});
+    vis.insert(start);
+
+    while(!q.empty())
+    {
+        auto cur = q.front();
+        q.pop();
+        string state = cur.first;
+        string path = cur.second;
+
+        if(state == "12345678x")
+            return path;
+        
+        // 找到x位置
+        int pos = state.find('x');
+        int x = pos / 3;
+        int y = pos % 3;
+
+        for(int d=0;d<4;d++)
+        {
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+            if(nx >=0 && nx <3 && ny >=0 && ny <3)
             {
-                return false;
+                string nxt = state;
+                swap(nxt[pos], nxt[nx*3 + ny]);
+                if(!vis.count(nxt))
+                {
+                    vis.insert(nxt);
+                    q.push({nxt, path + dir[d]});
+                }
             }
         }
     }
-    return true;
+    return "";
 }
-void dfs(int x,int y)
-{
-    if(pan())
-    {
-       
-    }
-}
+
 int main()
 {
-    int a=1;
-    for(int i=0;i<3;i++)
+    string start;
+    char ch;
+    for(int i=0;i<9;i++)
     {
-        for(int j=0;j<3;j++)
-        {
-            cin>>s[i][j];
-            t[i][j]=a;
-            a++;
-        }
+        cin >> ch;
+        start += ch;
     }
-    
+
+    if(!checkSolvable(start))
+    {
+        cout << "unsolvable\n";
+        return 0;
+    }
+    string res = bfs(start);
+    if(res.empty()) cout << "unsolvable\n";
+    else cout << res << "\n";
     return 0;
 }
+
